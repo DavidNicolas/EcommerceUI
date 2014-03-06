@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<LINK href="css/style.css" rel="stylesheet" type="text/css">
+
+<script>
+var categories = {
+ "fruits": [
+   { "kiwis": 3,
+     "mangues": 4,
+     "pommes": null
+   },
+   { "panier": true },
+ ],
+ "legumes":
+   { "patates": "amandine",
+     "figues": "de barbarie",
+     "poireaux": false
+   }
+};
+var product = [
+  {
+  	name: "laptop",
+  	img:"http://s3.static69.com/m/image-offre/b/4/5/f/b45f09dbb9be680d343b0bd573592a6b-500x500.jpg"
+  },
+   {
+  	name: "laptop",
+  	img:"http://s3.static69.com/m/image-offre/b/4/5/f/b45f09dbb9be680d343b0bd573592a6b-500x500.jpg"
+  },
+ {
+  	name: "laptop",
+  	img:"http://s3.static69.com/m/image-offre/b/4/5/f/b45f09dbb9be680d343b0bd573592a6b-500x500.jpg"
+  },
+ {
+  	name: "laptop",
+  	img:"http://s3.static69.com/m/image-offre/b/4/5/f/b45f09dbb9be680d343b0bd573592a6b-500x500.jpg"
+  },
+ {
+  	name: "laptop",
+  	img:"http://s3.static69.com/m/image-offre/b/4/5/f/b45f09dbb9be680d343b0bd573592a6b-500x500.jpg"
+  },
+ {
+  	name: "laptop",
+  	img:"http://s3.static69.com/m/image-offre/b/4/5/f/b45f09dbb9be680d343b0bd573592a6b-500x500.jpg"
+  },
+ {
+  	name: "laptop",
+  	img:"http://s3.static69.com/m/image-offre/b/4/5/f/b45f09dbb9be680d343b0bd573592a6b-500x500.jpg"
+  },
+  {
+  	name: "tele",
+  	img:"http://s3.static69.com/m/image-offre/b/4/5/f/b45f09dbb9be680d343b0bd573592a6b-500x500.jpg"
+  }
+];
+
+
+var cat = [
+  {name: "informatique"},
+  {name: "TVSION"}
+  ];
+
+function init()
+{
+	addMenuItem();
+	addItem();
+}
+
+function addMenuItem()
+{
+	var categorieUl = document.getElementById("categorieUl");
+	
+	for (i in cat)
+	{
+		var categorieLi = document.createElement("li");
+		var categorieName = document.createElement("a");
+		categorieName.innerHTML = cat[i].name;
+		categorieName.setAttribute("href","#");
+		categorieLi.appendChild(categorieName);
+		categorieLi.setAttribute("display","inline");
+		categorieUl.appendChild(categorieLi);
+
+	}		
+}
+
+function addItem()
+{	
+	var divGlobal = document.getElementById("divGlobal");
+	
+	for (p in product)
+	{
+		var divItem= document.createElement("div");
+		divItem.setAttribute("float","left");
+		var imgItem = document.createElement("img");
+		imgItem.setAttribute("src", product[p].img);
+		divItem.appendChild(imgItem);
+		divGlobal.appendChild(divItem);
+	}
+	
+	document.getElementById("nextPageDiv").style.visibility='hidden';
+				
+}
+
+window.onload=init;
+
+</script>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>Commande En ligne</title>
+</head>
+
+<body>
+<br>
+<ul id="categorieUl">
+</ul>
+<div align="right">
+<a href="#" style="font-size:20px;text-align:left">Mon Compte</a>
+
+</div>
+
+<div id="divGlobal" style="width:100%;">
+
+</div>
+<div id="nextPageDiv" style="visibility:hidden;">
+<input type="button" value="PageSuivante">
+</div>
+</body>
+
+</html>
