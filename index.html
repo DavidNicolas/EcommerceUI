@@ -1,127 +1,188 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<LINK href="css/style.css" rel="stylesheet" type="text/css">
+  <head>
+	<LINK href="css/style.css" rel="stylesheet" type="text/css">
+	<script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+	<script>
+	 var url = "http://webservicecommande-85865.euw1.nitrousbox.com";
 
-<script>
-var categories = {
- "fruits": [
-   { "kiwis": 3,
-     "mangues": 4,
-     "pommes": null
-   },
-   { "panier": true },
- ],
- "legumes":
-   { "patates": "amandine",
-     "figues": "de barbarie",
-     "poireaux": false
-   }
-};
-var product = [
-  {
-  	name: "laptop",
-  	img:"http://s3.static69.com/m/image-offre/b/4/5/f/b45f09dbb9be680d343b0bd573592a6b-500x500.jpg"
-  },
-   {
-  	name: "laptop",
-  	img:"http://s3.static69.com/m/image-offre/b/4/5/f/b45f09dbb9be680d343b0bd573592a6b-500x500.jpg"
-  },
- {
-  	name: "laptop",
-  	img:"http://s3.static69.com/m/image-offre/b/4/5/f/b45f09dbb9be680d343b0bd573592a6b-500x500.jpg"
-  },
- {
-  	name: "laptop",
-  	img:"http://s3.static69.com/m/image-offre/b/4/5/f/b45f09dbb9be680d343b0bd573592a6b-500x500.jpg"
-  },
- {
-  	name: "laptop",
-  	img:"http://s3.static69.com/m/image-offre/b/4/5/f/b45f09dbb9be680d343b0bd573592a6b-500x500.jpg"
-  },
- {
-  	name: "laptop",
-  	img:"http://s3.static69.com/m/image-offre/b/4/5/f/b45f09dbb9be680d343b0bd573592a6b-500x500.jpg"
-  },
- {
-  	name: "laptop",
-  	img:"http://s3.static69.com/m/image-offre/b/4/5/f/b45f09dbb9be680d343b0bd573592a6b-500x500.jpg"
-  },
-  {
-  	name: "tele",
-  	img:"http://s3.static69.com/m/image-offre/b/4/5/f/b45f09dbb9be680d343b0bd573592a6b-500x500.jpg"
-  }
-];
+	 function init()
+	 {
+	   createMenu();
+	   //showOverlay("Panier", document.createElement("div"));
 
+	   var close = document.getElementById("closeOverlayButton");
+	   close.addEventListener("click", closeOverlay, false);
 
-var cat = [
-  {name: "informatique"},
-  {name: "TVSION"}
-  ];
+	   //createConnection();
+	 }
 
-function init()
-{
-	addMenuItem();
-	addItem();
-}
+	 function createMenu() {
+	   $.getJSON(url + "/categories.json", function (data) {
+		 for (key in data) {
+		   console.log(data[key]);
+		   var name = data[key]["name"];
+		   var url = data[key]["url"];
+		   addMenuItem(name, url);
+		 }
+	   });
+	 }
 
-function addMenuItem()
-{
-	var categorieUl = document.getElementById("categorieUl");
-	
-	for (i in cat)
-	{
-		var categorieLi = document.createElement("li");
-		var categorieName = document.createElement("a");
-		categorieName.innerHTML = cat[i].name;
-		categorieName.setAttribute("href","#");
-		categorieLi.appendChild(categorieName);
-		categorieLi.setAttribute("display","inline");
-		categorieUl.appendChild(categorieLi);
+	 function createConnection() {
+	   var divConnection = document.createElement("div");
+	   var divMessage = document.createElement("div");
+	   divConnection.appendChild(divMessage);
 
-	}		
-}
+	   var divLogin = document.createElement("div");
+	   divConnection.appendChild(divLogin);
+	   var login = document.createElement("input");
+	   divLogin.appendChild(login);
+	   
+	   var divPassword = document.createElement("div");
+	   divConnection.appendChild(divPassword);
+	   var password = document.createElement("input");
+	   divPassword.appendChild(password);
 
-function addItem()
-{	
-	var divGlobal = document.getElementById("divGlobal");
-	
-	for (p in product)
-	{
-		var divItem= document.createElement("div");
-		divItem.setAttribute("float","left");
-		var imgItem = document.createElement("img");
-		imgItem.setAttribute("src", product[p].img);
-		divItem.appendChild(imgItem);
-		divGlobal.appendChild(divItem);
-	}
-	
-	document.getElementById("nextPageDiv").style.visibility='hidden';
-				
-}
+	   showOverlay("Connection", divConnection, 300, 150);
+	 }
+	 
+	 function clearPage() {
+	   var divGlobal = document.getElementById("divGlobal");
+	   divGlobal.innerHTML = "";
+	 }
 
-window.onload=init;
+	 function loadPageWithCategory(url) {
+	   $.getJSON(url, function (data) {
+		 clearPage();
+		 
+		 products = data["products"];
+		 console.log(data);
+		 
+		 for (i in products) {
+		   product = products[i];
+		   console.log("addProduct: " + product["name"]);
+		   addProduct(product["name"], product["price"], product["url_image"]);
+		 }
+	   });
+	 }
 
-</script>
-<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<title>Commande En ligne</title>
-</head>
+	 function closeOverlay() {
+	   var overlay = document.getElementById("overlay");
+	   overlay.setAttribute("class", "hidden");
+	 }
+	 
+	 function showOverlay(title, inner, width, height) {
+	   var overlay = document.getElementById("overlay");
+	   overlay.setAttribute("class", "visible");
+	   
+	   var detail = document.getElementById("detailOverlay");
+	   detail.style.width = "" + width + "px";
+	   detail.style.marginLeft = "" + (-width / 2.) + "px";
+	   detail.style.height = "" + height + "px";
+	   detail.style.marginTop = "" + (-height / 2.) + "px";
+	   var titleNode = document.getElementById("titleOverlay");
+	   titleNode.innerHTML = title;
 
-<body>
-<br>
-<ul id="categorieUl">
-</ul>
-<div align="right">
-<a href="#" style="font-size:20px;text-align:left">Mon Compte</a>
+	   var content = document.getElementById("detailContent");
+	   content.innerHTML = "";
+	   content.appendChild(inner);
+	 }
+	 
+	 function addMenuItem(cat, url) {
+	   var categorieUl = document.getElementById("categorieUl");
+	   
+	   var categorieLi = document.createElement("li");
+	   var categorieName = document.createElement("a");
+	   categorieName.innerHTML = cat;
+	   categorieName.setAttribute("href", "javascript:(0)");
+	   categorieName.addEventListener("click", function () { loadPageWithCategory(url); }, true);
+	   categorieLi.appendChild(categorieName);
+	   categorieUl.appendChild(categorieLi);
+	 }
 
-</div>
+	 function addProduct(name, price, img) {
+	   var divGlobal = document.getElementById("divGlobal");
 
-<div id="divGlobal" style="width:100%;">
+	   var divItem = document.createElement("div");
+	   divItem.setAttribute("class", "divProduct");
+	   divItem.addEventListener("click", function () {
+		 var titleProduct = document.createElement("div");
+		 titleProduct.setAttribute("class", "titleProductDiv");
 
-</div>
-<div id="nextPageDiv" style="visibility:hidden;">
-<input type="button" value="PageSuivante">
-</div>
-</body>
+		 var imgItem = document.createElement("img");
+		 imgItem.src = img;
+		 titleProduct.appendChild(imgItem);
+
+		 var addCart = document.createElement("div");
+		 addCart.class = "addToCart";
+		 titleProduct.appendChild(addCart);
+
+		 var descriptionItem = document.createElement("div");
+		 descriptionItem.class = "descriptionDetail";
+		 titleProduct.appendChild(descriptionItem);
+		 descriptionItem.innerHTML = "La super description !";
+		 
+		 var priceItem = document.createElement("div");
+		 priceItem.class = "priceItem";
+		 titleProduct.appendChild(priceItem);
+		 priceItem.innerHTML = price + " €";
+		 
+		 showOverlay(name, titleProduct, 700, 700);
+	   }, false);
+	   
+	   var titleFont = document.createElement("font");
+	   titleFont.setAttribute("class", "titleFont");
+	   titleFont.innerHTML = name;
+	   divItem.appendChild(titleFont);
+	   divItem.appendChild(document.createElement("br"));
+	   
+	   var imgItem = document.createElement("img");
+	   imgItem.setAttribute("class", "imgMiniat");
+	   imgItem.setAttribute("src", img);
+	   divItem.appendChild(imgItem);
+	   divItem.appendChild(document.createElement("br"));
+
+	   var priceFont = document.createElement("font");
+	   priceFont.setAttribute("class", "price");
+	   priceFont.innerHTML = price + " €";
+	   divItem.appendChild(priceFont);
+	   divGlobal.appendChild(divItem);
+	   
+	   document.getElementById("nextPageDiv").style.visibility='hidden';
+	 }
+
+	 window.onload=init;
+
+	</script>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+	<title>Commande En ligne</title>
+  </head>
+
+  <body id="body">
+	<br>
+	<ul id="categorieUl">
+	</ul>
+	<div align="right">
+	  <a href="#" style="font-size:20px;text-align:left">Mon Compte</a>
+
+	</div>
+	<div id="overlay" class="hidden">
+	  <div id="detailOverlay">
+		<div id="closeOverlayButton">
+		  <a href="javascript:(0)">
+			<img src="close-button.svg" with="30px" height="30px" />
+		  </a>
+		</div>
+		<div id="titleOverlay">Salut</div>
+		<div id="detailContent"></div>
+	  </div>
+	</div>
+	<div id="divGlobal" style="width:100%;">
+
+	</div>
+	<div id="nextPageDiv" style="visibility:hidden;">
+	  <input type="button" value="PageSuivante">
+	</div>
+  </body>
 
 </html>
